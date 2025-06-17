@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Netszatyor</title>
+</head>
+<body>
+<header>
+  <h1>Netszatyor Webáruház</h1>
+  <nav>
+    <a th:href="@{/login}">Belépés</a> |
+    <a th:href="@{/register}">Regisztráció</a>
+  </nav>
+</header>
+
+<h2>Akciós termékek</h2>
+<div>
+  <ul>
+    <li th:each="termek : ${akciok}">
+      <span th:text="${termek.nev}"></span> -
+      <span th:text="${termek.ar}"></span> Ft
+    </li>
+  </ul>
+</div>
+</body>
+</html>

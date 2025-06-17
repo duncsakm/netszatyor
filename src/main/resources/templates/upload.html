@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Netszatyor - DBF import</title>
+</head>
+<body>
+<h2>Termékfeltöltés DBF fájlból</h2>
+
+<form method="post" enctype="multipart/form-data" action="/upload">
+    <input type="file" name="file" accept=".dbf" required>
+    <button type="submit">Feltöltés</button>
+</form>
+
+<p th:text="${message}"></p>
+</body>
+</html>
