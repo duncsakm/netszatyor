@@ -8,6 +8,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@Table(name = "\"user\"")  // fontos, mert "user" kulcsszó
 public class User {
 
     @Id

@@ -19,4 +19,9 @@ public class HomeController {
         model.addAttribute("akciok", productRepository.findTop9ByOrderByArAsc()); // Pl. legolcsóbb termékek
         return "index";
     }
+
+    @GetMapping("/login")
+    public String login() {
+        return "login";
+    }
 }
