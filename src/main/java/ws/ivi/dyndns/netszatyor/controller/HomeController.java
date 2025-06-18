@@ -16,7 +16,7 @@ public class HomeController {
 
     @GetMapping("/")
     public String index(Model model) {
-        model.addAttribute("akciok", productRepository.findTop9ByOrderByArAsc()); // Pl. legolcsóbb termékek
+        model.addAttribute("akciok", productRepository.findTop9ByOrderByArAsc());
         return "index";
     }
 

@@ -13,13 +13,22 @@
     <nav>
         <a th:href="@{/}">Kezdőlap</a>
         <a th:href="@{/upload}">Feltöltés</a>
+
         <span sec:authorize="isAuthenticated()">
-            Bejelentkezve: <b sec:authentication="name"></b> |
-            <a th:href="@{/logout}">Kijelentkezés</a>
+            <b sec:authentication="name">[bejelentkezve]</b> |
+            <form th:action="@{/logout}" method="post" style="display:inline">
+                <button type="submit"
+                        style="background:none; border:none; color:#000; cursor:pointer; text-decoration:underline; font: inherit;">
+                    Kijelentkezés
+                </button>
+            </form>
+            <p>AUTH OK</p>
         </span>
+
         <span sec:authorize="isAnonymous()">
             <a th:href="@{/login}">Belépés</a> |
             <a th:href="@{/register}">Regisztráció</a>
+            <p>NEM VAGY BEJELENTKEZVE</p>
         </span>
     </nav>
 </header>

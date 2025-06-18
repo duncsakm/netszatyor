@@ -1,26 +1,28 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="hu"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="https://www.thymeleaf.org/extras/spring-security"
+      layout:decorate="~{base}">
 <head>
-  <meta charset="UTF-8">
-  <title>Netszatyor</title>
+  <title>Kezdőlap</title>
 </head>
 <body>
-<header>
-  <h1>Netszatyor Webáruház</h1>
-  <nav>
-    <a th:href="@{/login}">Belépés</a> |
-    <a th:href="@{/register}">Regisztráció</a>
-  </nav>
-</header>
+<main layout:fragment="content">
+  <h2>Akciós termékek</h2>
 
-<h2>Akciós termékek</h2>
-<div>
-  <ul>
-    <li th:each="termek : ${akciok}">
-      <span th:text="${termek.nev}"></span> -
-      <span th:text="${termek.ar}"></span> Ft
-    </li>
-  </ul>
-</div>
+  <div th:if="${#lists.isEmpty(akciok)}">
+    <p>Nincsenek elérhető akciók.</p>
+  </div>
+
+  <div th:unless="${#lists.isEmpty(akciok)}">
+    <ul>
+      <li th:each="termek : ${akciok}">
+        <strong th:text="${termek.garnev}">Terméknév</strong> –
+        <span th:text="${termek.ar}">Ár</span> Ft
+      </li>
+    </ul>
+  </div>
+</main>
 </body>
 </html>

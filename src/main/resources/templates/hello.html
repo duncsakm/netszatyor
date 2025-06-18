@@ -1,10 +1,18 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="hu"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="https://www.thymeleaf.org/extras/spring-security"
+      layout:decorate="~{base}">
 <head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
+  <title>Hello oldal</title>
 </head>
 <body>
-$END$
+<main layout:fragment="content">
+  <h1>Hello Thymeleaf!</h1>
+
+  <p sec:authorize="isAuthenticated()">Ez egy privát üzenet bejelentkezett felhasználóknak.</p>
+  <p sec:authorize="!isAuthenticated()">Kérlek, jelentkezz be a tartalom megtekintéséhez.</p>
+</main>
 </body>
 </html>
