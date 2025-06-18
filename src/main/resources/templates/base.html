@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="https://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title layout:title-pattern="$CONTENT_TITLE - Netszatyor">Netszatyor</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+
+<header>
+    <nav>
+        <a th:href="@{/}">Kezdőlap</a>
+        <a th:href="@{/upload}">Feltöltés</a>
+        <span sec:authorize="isAuthenticated()">
+            Bejelentkezve: <b sec:authentication="name"></b> |
+            <a th:href="@{/logout}">Kijelentkezés</a>
+        </span>
+        <span sec:authorize="isAnonymous()">
+            <a th:href="@{/login}">Belépés</a> |
+            <a th:href="@{/register}">Regisztráció</a>
+        </span>
+    </nav>
+</header>
+
+<main layout:fragment="content">
+    <!-- Az oldalspecifikus tartalom ide kerül -->
+</main>
+
+<footer>
+    <p>&copy; 2025 Netszatyor</p>
+</footer>
+
+</body>
+</html>
