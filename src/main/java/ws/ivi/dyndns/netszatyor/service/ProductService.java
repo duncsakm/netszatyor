@@ -1,5 +1,4 @@
 package ws.ivi.dyndns.netszatyor.service;
-import java.util.Optional;
 
 import com.linuxense.javadbf.DBFReader;
 import ws.ivi.dyndns.netszatyor.model.Product;
@@ -9,6 +8,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.InputStream;
 import java.math.BigDecimal;
+import java.util.Optional;
 
 @Service
 public class ProductService {
@@ -25,30 +25,48 @@ public class ProductService {
 
         Object[] row;
         while ((row = reader.nextRecord()) != null) {
-            String cikkszam = row[0].toString().trim();
+            String cktkod = row[0].toString().trim();
 
-            // meglévő termék keresése
-            Optional<Product> optionalProduct = productRepository.findById(cikkszam);
+            Optional<Product> optionalProduct = productRepository.findById(cktkod);
 
-            String nev = row[1].toString().trim();
-            BigDecimal ar = new BigDecimal(row[2].toString());
-            int keszlet = Integer.parseInt(row[3].toString());
+            String cktnev = row[1].toString().split("@")[0].trim();
+            String cktcsp = row[2].toString().trim();
+            String cktcsa = row[3].toString().trim();
+            Integer cktafa = Integer.parseInt(row[4].toString());
+            BigDecimal cktsar = new BigDecimal(row[5].toString());
+            BigDecimal cktfar = new BigDecimal(row[6].toString());
+            BigDecimal cktkem = new BigDecimal(row[7].toString());
 
             if (optionalProduct.isPresent()) {
-                // ha már létezik → csak frissítjük a mezőket, ha változás van
                 Product existing = optionalProduct.get();
                 boolean modified = false;
 
-                if (!existing.getNev().equals(nev)) {
-                    existing.setNev(nev);
+                if (!existing.getCktnev().equals(cktnev)) {
+                    existing.setCktnev(cktnev);
                     modified = true;
                 }
-                if (existing.getAr().compareTo(ar) != 0) {
-                    existing.setAr(ar);
+                if (!existing.getCktcsp().equals(cktcsp)) {
+                    existing.setCktcsp(cktcsp);
                     modified = true;
                 }
-                if (existing.getKeszlet() != keszlet) {
-                    existing.setKeszlet(keszlet);
+                if (!existing.getCktcsa().equals(cktcsa)) {
+                    existing.setCktcsa(cktcsa);
+                    modified = true;
+                }
+                if (!existing.getCktafa().equals(cktafa)) {
+                    existing.setCktafa(cktafa);
+                    modified = true;
+                }
+                if (existing.getCktsar().compareTo(cktsar) != 0) {
+                    existing.setCktsar(cktsar);
+                    modified = true;
+                }
+                if (existing.getCktfar().compareTo(cktfar) != 0) {
+                    existing.setCktfar(cktfar);
+                    modified = true;
+                }
+                if (existing.getCktkem().compareTo(cktkem) != 0) {
+                    existing.setCktkem(cktkem);
                     modified = true;
                 }
 
@@ -57,11 +75,19 @@ public class ProductService {
                 }
 
             } else {
-                // új termék beszúrása
-                Product p = new Product(cikkszam, nev, ar, keszlet);
+                Product p = Product.builder()
+                        .cktkod(cktkod)
+                        .cktnev(cktnev)
+                        .cktcsp(cktcsp)
+                        .cktcsa(cktcsa)
+                        .cktafa(cktafa)
+                        .cktsar(cktsar)
+                        .cktfar(cktfar)
+                        .cktkem(cktkem)
+                        .build();
+
                 productRepository.save(p);
             }
         }
     }
-
 }
