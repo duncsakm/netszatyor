@@ -1,34 +1,42 @@
 package ws.ivi.dyndns.netszatyor.model;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
+
+import java.math.BigDecimal;
 
 @Entity
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @Table(name = "ckt")
-@Getter
-@Setter
 public class Ckt {
 
     @Id
-    @Column(name = "cktuid")
-    private String cktuid;
+    @Column(length = 13)
+    private String cktkod;         // cikkszám (kulcs)
 
-    @Column(name = "cktcik")
-    private String cktcik;
+    @Column(length = 46)
+    private String cktnev;         // megnevezés
 
-    @Column(name = "cktmeg")
-    private String cktmeg;
+    @Column(length = 6)
+    private String cktcsp;         // főcsoport
 
-    @Column(name = "cktmer")
-    private String cktmer;
+    @Column(length = 6)
+    private String cktcsa;         // alcsoport
 
-    @Column(name = "cktfar")
-    private Double cktfar;
+    private Integer cktafa;        // ÁFA-kulcs
 
-    @Column(name = "cktar4")
-    private Double cktar4;
+    @Column(precision = 15, scale = 3)
+    private BigDecimal cktsar;     // beszerzési ár (bruttó)
 
-    @Column(name = "cktle2")
-    private String cktle2;
+    @Column(precision = 15, scale = 3)
+    private BigDecimal cktfar;     // fogyasztói ár (bruttó)
+
+    @Column(precision = 15, scale = 3)
+    private BigDecimal cktakc;     // akciós ár (bruttó) → új mező
+
+    @Column(precision = 15, scale = 4)
+    private BigDecimal cktkem;     // készlet
 }

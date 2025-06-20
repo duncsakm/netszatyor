@@ -1,14 +1,15 @@
 package ws.ivi.dyndns.netszatyor.service;
 
 import com.linuxense.javadbf.DBFReader;
-import ws.ivi.dyndns.netszatyor.model.Product;
+import ws.ivi.dyndns.netszatyor.model.Ckt;
 import ws.ivi.dyndns.netszatyor.repository.ProductRepository;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.InputStream;
 import java.math.BigDecimal;
 import java.util.Optional;
+import java.util.Map;
+import java.util.HashMap;
 
 @Service
 public class ProductService {
@@ -19,26 +20,34 @@ public class ProductService {
         this.productRepository = repo;
     }
 
-    public void importFromDbf(MultipartFile file) throws Exception {
-        InputStream inputStream = file.getInputStream();
+    public void importFromDbf(InputStream inputStream) throws Exception {
         DBFReader reader = new DBFReader(inputStream);
+
+        int fieldCount = reader.getFieldCount();
+
+        // Térkép: mezőnevek -> index
+        Map<String, Integer> fieldIndexMap = new HashMap<>();
+        for (int i = 0; i < fieldCount; i++) {
+            fieldIndexMap.put(reader.getField(i).getName().toUpperCase(), i);
+        }
 
         Object[] row;
         while ((row = reader.nextRecord()) != null) {
-            String cktkod = row[0].toString().trim();
+            String cktkod = row[fieldIndexMap.get("CKTKOD")].toString().trim();
 
-            Optional<Product> optionalProduct = productRepository.findById(cktkod);
+            Optional<Ckt> optionalCkt = productRepository.findById(cktkod);
 
-            String cktnev = row[1].toString().split("@")[0].trim();
-            String cktcsp = row[2].toString().trim();
-            String cktcsa = row[3].toString().trim();
-            Integer cktafa = Integer.parseInt(row[4].toString());
-            BigDecimal cktsar = new BigDecimal(row[5].toString());
-            BigDecimal cktfar = new BigDecimal(row[6].toString());
-            BigDecimal cktkem = new BigDecimal(row[7].toString());
+            String cktnev = row[fieldIndexMap.get("CKTNEV")].toString().split("@")[0].trim();
+            String cktcsp = row[fieldIndexMap.get("CKTCSP")].toString().trim();
+            String cktcsa = row[fieldIndexMap.get("CKTCSA")].toString().trim();
+            Integer cktafa = Integer.parseInt(row[fieldIndexMap.get("CKTAFA")].toString());
+            BigDecimal cktsar = new BigDecimal(row[fieldIndexMap.get("CKTSAR")].toString());
+            BigDecimal cktfar = new BigDecimal(row[fieldIndexMap.get("CKTFAR")].toString());
+            BigDecimal cktkem = new BigDecimal(row[fieldIndexMap.get("CKTKEM")].toString());
+            BigDecimal cktakc = new BigDecimal(row[fieldIndexMap.get("CKTAKC")].toString());
 
-            if (optionalProduct.isPresent()) {
-                Product existing = optionalProduct.get();
+            if (optionalCkt.isPresent()) {
+                Ckt existing = optionalCkt.get();
                 boolean modified = false;
 
                 if (!existing.getCktnev().equals(cktnev)) {
@@ -69,13 +78,17 @@ public class ProductService {
                     existing.setCktkem(cktkem);
                     modified = true;
                 }
+                if (existing.getCktakc() == null || existing.getCktakc().compareTo(cktakc) != 0) {
+                    existing.setCktakc(cktakc);
+                    modified = true;
+                }
 
                 if (modified) {
                     productRepository.save(existing);
                 }
 
             } else {
-                Product p = Product.builder()
+                Ckt ckt = Ckt.builder()
                         .cktkod(cktkod)
                         .cktnev(cktnev)
                         .cktcsp(cktcsp)
@@ -84,9 +97,10 @@ public class ProductService {
                         .cktsar(cktsar)
                         .cktfar(cktfar)
                         .cktkem(cktkem)
+                        .cktakc(cktakc)
                         .build();
 
-                productRepository.save(p);
+                productRepository.save(ckt);
             }
         }
     }

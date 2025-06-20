@@ -22,4 +22,8 @@ public class User {
 
     @Column(nullable = false)
     private String role;  // <-- EZ KELL
+
+    @Transient
+    private String confirmPassword;
+
 }

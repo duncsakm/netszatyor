@@ -1,8 +1,11 @@
-{% extends 'base.html' %}
-
-{% block title %}Regisztráció{% endblock %}
-
-{% block content %}
+<!-- templates/register.html -->
+<!DOCTYPE html>
+<html lang="hu" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Regisztráció</title>
+</head>
+<body>
 <h2>Regisztráció</h2>
 
 <form th:action="@{/register}" th:object="${user}" method="post">
@@ -16,12 +19,13 @@
     </div>
     <div>
         <label for="confirmPassword">Jelszó újra:</label>
-        <input type="password" id="confirmPassword" th:field="*{confirmPassword}" required>
+        <input type="password" id="confirmPassword" name="confirmPassword" required>
     </div>
     <div>
         <button type="submit">Regisztráció</button>
     </div>
 </form>
 
-<p>Van már fiókod? <a th:href="@{/login}">Bejelentkezés</a></p>
-{% endblock %}
+<p>Már van fiókod? <a th:href="@{/login}">Bejelentkezés</a></p>
+</body>
+</html>

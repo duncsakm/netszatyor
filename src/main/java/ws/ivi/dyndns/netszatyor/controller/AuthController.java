@@ -18,21 +18,33 @@ public class AuthController {
         this.passwordEncoder = passwordEncoder;
     }
 
+    // 1. REGISZTRÁCIÓS ŰRLAP MEGJELENÍTÉSE
     @GetMapping("/register")
     public String registerForm(Model model) {
         model.addAttribute("user", new User());
-        return "register";
+        return "register"; // ez a register.html
     }
 
+    // 2. REGISZTRÁCIÓS ADATOK FELDOLGOZÁSA
     @PostMapping("/register")
-    public String processRegistration(@ModelAttribute User user, Model model) {
+    public String processRegistration(@ModelAttribute("user") User user, Model model) {
+        // Ellenőrzés: már regisztrált email?
         if (userRepository.findByEmail(user.getEmail()).isPresent()) {
             model.addAttribute("error", "Ez az e-mail cím már regisztrált.");
+            return "register"; // visszairányítás hiba esetén
+        }
+
+        // Ellenőrzés: jelszavak egyeznek?
+        if (user.getConfirmPassword() != null && !user.getPassword().equals(user.getConfirmPassword())) {
+            model.addAttribute("error", "A jelszavak nem egyeznek.");
             return "register";
         }
 
+        // Mentés, ha minden rendben
         user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setRole("ROLE_USER");
         userRepository.save(user);
-        return "redirect:/login";
+
+        return "redirect:/login"; // csak sikeres mentés után
     }
 }
