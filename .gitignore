@@ -20,3 +20,6 @@ Thumbs.db
 # Application properties – fontos: NE kerüljön fel jelszóval!
 src/main/resources/application.properties
 src/main/resources/application.yml
+
+# Zárjuk ki a teljes media mappát
+/media/

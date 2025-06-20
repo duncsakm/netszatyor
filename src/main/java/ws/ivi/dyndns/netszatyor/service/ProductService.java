@@ -2,45 +2,63 @@ package ws.ivi.dyndns.netszatyor.service;
 
 import com.linuxense.javadbf.DBFReader;
 import ws.ivi.dyndns.netszatyor.model.Ckt;
+import ws.ivi.dyndns.netszatyor.model.FeldolgozasStatusz;
 import ws.ivi.dyndns.netszatyor.repository.ProductRepository;
+import ws.ivi.dyndns.netszatyor.repository.FeldolgozasStatuszRepository;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.io.InputStream;
 import java.math.BigDecimal;
-import java.util.Optional;
-import java.util.Map;
-import java.util.HashMap;
+import java.time.LocalDateTime;
+import java.util.*;
 
 @Service
 public class ProductService {
 
     private final ProductRepository productRepository;
+    private final FeldolgozasStatuszRepository statuszRepository;
 
-    public ProductService(ProductRepository repo) {
-        this.productRepository = repo;
+    public ProductService(ProductRepository productRepository,
+                          FeldolgozasStatuszRepository statuszRepository) {
+        this.productRepository = productRepository;
+        this.statuszRepository = statuszRepository;
     }
 
-    public void importFromDbf(InputStream inputStream) throws Exception {
+    @Async
+    public void importFromDbf(InputStream inputStream, String filename) throws Exception {
+        System.out.println(">>> [INDÍTÁS] Feldolgozás elkezdődött: " + filename);
+        updateStatusz(filename, 0, 0, 0, false);
+
         DBFReader reader = new DBFReader(inputStream);
+        reader.setCharactersetName("Cp852");
 
         int fieldCount = reader.getFieldCount();
-
-        // Térkép: mezőnevek -> index
         Map<String, Integer> fieldIndexMap = new HashMap<>();
         for (int i = 0; i < fieldCount; i++) {
             fieldIndexMap.put(reader.getField(i).getName().toUpperCase(), i);
         }
 
         Object[] row;
-        while ((row = reader.nextRecord()) != null) {
-            String cktkod = row[fieldIndexMap.get("CKTKOD")].toString().trim();
+        int total = 0;
+        int uj = 0;
+        int modositott = 0;
 
+        long lastUpdate = System.currentTimeMillis();
+
+        while ((row = reader.nextRecord()) != null) {
+            total++;
+
+            String cktkod = row[fieldIndexMap.get("CKTKOD")].toString().trim();
             Optional<Ckt> optionalCkt = productRepository.findById(cktkod);
 
             String cktnev = row[fieldIndexMap.get("CKTNEV")].toString().split("@")[0].trim();
             String cktcsp = row[fieldIndexMap.get("CKTCSP")].toString().trim();
             String cktcsa = row[fieldIndexMap.get("CKTCSA")].toString().trim();
-            Integer cktafa = Integer.parseInt(row[fieldIndexMap.get("CKTAFA")].toString());
+
+            // Javított sor – lebegőpontosból egész szám
+            int cktafa = (int) Double.parseDouble(row[fieldIndexMap.get("CKTAFA")].toString());
+
             BigDecimal cktsar = new BigDecimal(row[fieldIndexMap.get("CKTSAR")].toString());
             BigDecimal cktfar = new BigDecimal(row[fieldIndexMap.get("CKTFAR")].toString());
             BigDecimal cktkem = new BigDecimal(row[fieldIndexMap.get("CKTKEM")].toString());
@@ -85,6 +103,7 @@ public class ProductService {
 
                 if (modified) {
                     productRepository.save(existing);
+                    modositott++;
                 }
 
             } else {
@@ -99,9 +118,33 @@ public class ProductService {
                         .cktkem(cktkem)
                         .cktakc(cktakc)
                         .build();
-
                 productRepository.save(ckt);
+                uj++;
+            }
+
+            long now = System.currentTimeMillis();
+            if (now - lastUpdate > 10_000) {
+                updateStatusz(filename, total, uj, modositott, false);
+                lastUpdate = now;
             }
         }
+
+        updateStatusz(filename, total, uj, modositott, true); // végső állapot
+        System.out.println(">>> [KÉSZ] Feldolgozás véget ért: " + filename);
+    }
+
+    private void updateStatusz(String filename, int feldolgozott, int uj, int modositott, boolean kesz) {
+        FeldolgozasStatusz statusz = FeldolgozasStatusz.builder()
+                .fajlNev(filename)
+                .feldolgozottSor(feldolgozott)
+                .ujRekord(uj)
+                .modositottRekord(modositott)
+                .kesz(kesz)
+                .frissitve(LocalDateTime.now())
+                .build();
+
+        statuszRepository.save(statusz);
+        System.out.printf(">>> [MENTÉS] Állapot mentve – feldolgozott: %d, új: %d, módosított: %d, kész: %s%n",
+                feldolgozott, uj, modositott, kesz ? "igen" : "nem");
     }
 }

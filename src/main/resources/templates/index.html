@@ -18,8 +18,8 @@
   <div th:unless="${#lists.isEmpty(products)}">
     <ul>
       <li th:each="ckt : ${products}">
-        <strong th:text="${product.cktnev}">Terméknév</strong> –
-        <span th:text="${product.cktfar}">Ár</span> Ft
+        <strong th:text="${ckt.cktnev}">Terméknév</strong> –
+        <span th:text="${ckt.cktfar}">Ár</span> Ft
       </li>
     </ul>
   </div>
