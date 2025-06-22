@@ -4,6 +4,11 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.math.BigDecimal;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+import jakarta.persistence.Transient;
+
 
 @Entity
 @Data
@@ -39,4 +44,20 @@ public class Ckt {
 
     @Column(precision = 15, scale = 4)
     private BigDecimal cktkem;     // készlet
+
+    @Transient
+    public List<String> getKepek() {
+        List<String> kepek = new ArrayList<>();
+        for (int i = 1; i <= 9; i++) {
+            String nev = "C_" + this.cktkod + "_" + i + ".JPG";
+            File file = new File("media/kepek/" + nev);
+            if (file.exists()) {
+                kepek.add("/media/kepek/" + nev); // teljes relatív URL
+            }
+        }
+        return kepek;
+    }
+
+
+
 }

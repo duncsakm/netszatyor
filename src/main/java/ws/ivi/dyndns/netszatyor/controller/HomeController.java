@@ -16,7 +16,7 @@ public class HomeController {
 
     @GetMapping("/")
     public String index(Model model) {
-        model.addAttribute("products", productRepository.findRandom9Akcios());
+        model.addAttribute("ckt", productRepository.findRandom9Akcios());
         return "index";
     }
 

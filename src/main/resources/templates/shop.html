@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="hu" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Termékek - Netszatyor</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/css/font-awesome.min.css}">
+    <link rel="stylesheet" th:href="@{/css/main.css}">
+</head>
+<body>
+
+<header id="header">
+    <div class="header-middle">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-4">
+                    <div class="logo pull-left">
+                        <a href="/" style="font-size: 24px; font-weight: bold;">Netszatyor</a>
+                    </div>
+                </div>
+                <div class="col-sm-8">
+                    <div class="shop-menu pull-right">
+                        <ul class="nav navbar-nav">
+                            <li><a href="/login"><i class="fa fa-lock"></i> Belépés</a></li>
+                            <li><a href="/register"><i class="fa fa-user"></i> Regisztráció</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<section>
+    <div class="container">
+        <div class="row">
+
+            <!-- Bal oldali szűrő -->
+            <div class="col-sm-3">
+                <div class="left-sidebar">
+                    <h2>Kategóriák</h2>
+                    <div class="panel-group category-products">
+                        <div class="panel panel-default" th:each="focsoport : ${focsoportok}">
+                            <div class="panel-heading">
+                                <h4 class="panel-title">
+                                    <a th:href="@{/shop(focsoport=${focsoport.cspkod})}" th:text="${focsoport.cspnev}">Főcsoport</a>
+                                </h4>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h2>Rendezés</h2>
+                    <form method="get" th:action="@{/shop}">
+                        <select name="rendezes" onchange="this.form.submit()">
+                            <option value="">-- Válassz --</option>
+                            <option value="ar_asc" th:selected="${rendezes == 'ar_asc'}">Ár szerint növekvő</option>
+                            <option value="ar_desc" th:selected="${rendezes == 'ar_desc'}">Ár szerint csökkenő</option>
+                        </select>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Jobb oldali terméklista -->
+            <div class="col-sm-9 padding-right">
+                <div class="features_items">
+                    <h2 class="title text-center">Termékek</h2>
+                    <div class="row">
+                        <div class="col-sm-4" th:each="termek : ${termekek}">
+                            <div class="product-image-wrapper">
+                                <div class="single-products">
+                                    <div class="productinfo text-center">
+                                        <div th:if="${termek.kepek != null and !termek.kepek.isEmpty()}">
+                                            <img th:src="@{'/media/kepek/' + ${termek.kepek[0]}}" alt="Kép" style="max-height:200px"/>
+                                        </div>
+                                        <div th:if="${termek.kepek == null or termek.kepek.isEmpty()}">
+                                            <img src="/img/no-image.jpg" alt="Nincs kép" style="max-height:200px"/>
+                                        </div>
+                                        <h2 th:text="${termek.cktfar + ' Ft'}">Ár</h2>
+                                        <p th:text="${termek.cktnev}">Terméknév</p>
+                                        <a th:href="@{'/termek/' + ${termek.cktkod}}" class="btn btn-default add-to-cart">
+                                            <i class="fa fa-shopping-cart"></i> Részletek
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div> <!-- col-sm-4 -->
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<footer id="footer">
+    <div class="footer-bottom">
+        <div class="container">
+            <div class="row">
+                <p class="pull-left">© 2025 Netszatyor Webáruház</p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<script th:src="@{/js/jquery.js}"></script>
+<script th:src="@{/js/bootstrap.min.js}"></script>
+<script th:src="@{/js/main.js}"></script>
+</body>
+</html>

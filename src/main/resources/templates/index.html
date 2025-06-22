@@ -1,28 +1,84 @@
 <!DOCTYPE html>
-<html lang="hu"
-      xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      xmlns:sec="https://www.thymeleaf.org/extras/spring-security"
-      layout:decorate="~{base}">
+<html lang="hu" xmlns:th="http://www.thymeleaf.org">
 <head>
-  <title>Kezdőlap</title>
+    <meta charset="UTF-8">
+    <title>Netszatyor Webáruház</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/css/font-awesome.min.css}">
+    <link rel="stylesheet" th:href="@{/css/main.css}">
 </head>
 <body>
-<main layout:fragment="content">
-  <h2>Akciós termékek</h2>
 
-  <div th:if="${#lists.isEmpty(products)}">
-    <p>Nincsenek elérhető akciók.</p>
-  </div>
+<!-- Fejléc -->
+<header id="header">
+    <div class="header_top">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="contactinfo">
+                        <ul class="nav nav-pills">
+                            <li><a href="#"><i class="fa fa-phone"></i> +36 1 234 5678</a></li>
+                            <li><a href="#"><i class="fa fa-envelope"></i> info@netszatyor.hu</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-sm-6 text-end">
+                    <ul class="nav navbar-nav">
+                        <li><a href="/login"><i class="fa fa-lock"></i> Belépés</a></li>
+                        <li><a href="/register"><i class="fa fa-user"></i> Regisztráció</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
 
-  <div th:unless="${#lists.isEmpty(products)}">
-    <ul>
-      <li th:each="ckt : ${products}">
-        <strong th:text="${ckt.cktnev}">Terméknév</strong> –
-        <span th:text="${ckt.cktfar}">Ár</span> Ft
-      </li>
-    </ul>
-  </div>
-</main>
+    <div class="header-middle bg-light py-3">
+        <div class="container text-center">
+            <h1>Netszatyor Webáruház</h1>
+        </div>
+    </div>
+</header>
+
+<!-- Termékek -->
+<section>
+    <div class="container">
+        <div class="row">
+            <h2 class="title text-center">Akciós termékek</h2>
+            <div class="col-sm-12">
+                <div class="features_items row">
+                    <div class="col-md-4 mb-4" th:each="termek : ${ckt}">
+                        <div class="product-image-wrapper">
+                            <div class="single-products">
+                                <div class="productinfo text-center">
+                                    <img <img th:if="${termek.kepek != null and !termek.kepek.isEmpty()}"
+                                              th:src="@{${termek.kepek[0]}}" alt="Kép" style="max-height:200px">
+
+                                    <img th:if="${termek.kepek == null or termek.kepek.isEmpty()}"
+                                         src="/img/no-image.jpg" alt="Nincs kép" style="max-height:200px">
+
+                                    <h2 th:text="${termek.cktakc} + ' Ft'">Akciós ár</h2>
+                                    <p>
+                                        <span class="text-decoration-line-through" th:text="${termek.cktfar} + ' Ft'">Eredeti ár</span><br>
+                                        <span th:text="${termek.cktnev}">Terméknév</span>
+                                    </p>
+                                    <a href="#" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i> Kosárba</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Lábléc -->
+<footer id="footer" class="bg-dark text-white text-center p-3 mt-4">
+    <p>&copy; 2025 Netszatyor Webáruház</p>
+</footer>
+
+<script th:src="@{/js/jquery.js}"></script>
+<script th:src="@{/js/bootstrap.min.js}"></script>
+<script th:src="@{/js/main.js}"></script>
 </body>
 </html>
