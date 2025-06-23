@@ -8,7 +8,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Table(name = "\"user\"")  // fontos, mert "user" kulcsszó
+@Table(name = "\"user\"")
 public class User {
 
     @Id
@@ -21,9 +21,15 @@ public class User {
     private String password;
 
     @Column(nullable = false)
-    private String role;  // <-- EZ KELL
+    private String role;
 
     @Transient
     private String confirmPassword;
 
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    private UserData userData;
+
+    public UserData getUserData() {
+        return userData;
+    }
 }

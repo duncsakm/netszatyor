@@ -10,19 +10,45 @@
 <body>
 
 <header id="header">
+    <!-- Top header -->
+    <div class="header_top">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="contactinfo">
+                        <ul class="nav nav-pills">
+                            <li><a href="#"><i class="fa fa-phone"></i> +36 1 234 5678</a></li>
+                            <li><a href="#"><i class="fa fa-envelope"></i> info@netszatyor.hu</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-sm-6 text-end">
+                    <div class="social-icons pull-right">
+                        <ul class="nav navbar-nav">
+                            <li><a href="/login"><i class="fa fa-lock"></i> Belépés</a></li>
+                            <li><a href="/register"><i class="fa fa-user"></i> Regisztráció</a></li>
+                            <li><a href="/cart"><i class="fa fa-shopping-cart"></i> Kosár</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Middle header -->
     <div class="header-middle">
         <div class="container">
             <div class="row">
                 <div class="col-sm-4">
                     <div class="logo pull-left">
-                        <a href="/" style="font-size: 24px; font-weight: bold;">Netszatyor</a>
+                        <a href="/" style="font-size: 28px; font-weight: bold;">Netszatyor</a>
                     </div>
                 </div>
                 <div class="col-sm-8">
                     <div class="shop-menu pull-right">
                         <ul class="nav navbar-nav">
-                            <li><a href="/login"><i class="fa fa-lock"></i> Belépés</a></li>
-                            <li><a href="/register"><i class="fa fa-user"></i> Regisztráció</a></li>
+                            <li><a href="/profil"><i class="fa fa-user"></i> Profil</a></li>
+                            <li><a href="/logout"><i class="fa fa-unlock"></i> Kilépés</a></li>
                         </ul>
                     </div>
                 </div>
@@ -34,8 +60,7 @@
 <section>
     <div class="container">
         <div class="row">
-
-            <!-- Bal oldali szűrő -->
+            <!-- Oldalsáv -->
             <div class="col-sm-3">
                 <div class="left-sidebar">
                     <h2>Kategóriák</h2>
@@ -51,7 +76,7 @@
 
                     <h2>Rendezés</h2>
                     <form method="get" th:action="@{/shop}">
-                        <select name="rendezes" onchange="this.form.submit()">
+                        <select class="form-select" name="rendezes" onchange="this.form.submit()">
                             <option value="">-- Válassz --</option>
                             <option value="ar_asc" th:selected="${rendezes == 'ar_asc'}">Ár szerint növekvő</option>
                             <option value="ar_desc" th:selected="${rendezes == 'ar_desc'}">Ár szerint csökkenő</option>
@@ -60,7 +85,7 @@
                 </div>
             </div>
 
-            <!-- Jobb oldali terméklista -->
+            <!-- Termékek -->
             <div class="col-sm-9 padding-right">
                 <div class="features_items">
                     <h2 class="title text-center">Termékek</h2>
@@ -69,29 +94,28 @@
                             <div class="product-image-wrapper">
                                 <div class="single-products">
                                     <div class="productinfo text-center">
-                                        <div th:if="${termek.kepek != null and !termek.kepek.isEmpty()}">
-                                            <img th:src="@{'/media/kepek/' + ${termek.kepek[0]}}" alt="Kép" style="max-height:200px"/>
-                                        </div>
-                                        <div th:if="${termek.kepek == null or termek.kepek.isEmpty()}">
-                                            <img src="/img/no-image.jpg" alt="Nincs kép" style="max-height:200px"/>
-                                        </div>
+                                        <img th:if="${termek.kepek != null and !termek.kepek.isEmpty()}"
+                                             th:src="@{'/media/kepek/' + ${termek.kepek[0]}}"
+                                             alt="Kép" style="max-height:200px"/>
+                                        <img th:if="${termek.kepek == null or termek.kepek.isEmpty()}"
+                                             src="/img/no-image.jpg" alt="Nincs kép" style="max-height:200px"/>
                                         <h2 th:text="${termek.cktfar + ' Ft'}">Ár</h2>
                                         <p th:text="${termek.cktnev}">Terméknév</p>
                                         <a th:href="@{'/termek/' + ${termek.cktkod}}" class="btn btn-default add-to-cart">
-                                            <i class="fa fa-shopping-cart"></i> Részletek
+                                            <i class="fa fa-eye"></i> Részletek
                                         </a>
                                     </div>
                                 </div>
                             </div>
-                        </div> <!-- col-sm-4 -->
+                        </div> <!-- /.col-sm-4 -->
                     </div>
                 </div>
             </div>
-
         </div>
     </div>
 </section>
 
+<!-- Lábléc -->
 <footer id="footer">
     <div class="footer-bottom">
         <div class="container">

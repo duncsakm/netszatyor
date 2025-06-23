@@ -1,84 +1,93 @@
 <!DOCTYPE html>
-<html lang="hu" xmlns:th="http://www.thymeleaf.org">
+<html lang="hu" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{base.html}">
 <head>
-    <meta charset="UTF-8">
-    <title>Netszatyor Webáruház</title>
-    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
-    <link rel="stylesheet" th:href="@{/css/font-awesome.min.css}">
-    <link rel="stylesheet" th:href="@{/css/main.css}">
+    <title>Akciós termékek</title>
 </head>
+
 <body>
-
-<!-- Fejléc -->
-<header id="header">
-    <div class="header_top">
-        <div class="container">
-            <div class="row">
-                <div class="col-sm-6">
-                    <div class="contactinfo">
-                        <ul class="nav nav-pills">
-                            <li><a href="#"><i class="fa fa-phone"></i> +36 1 234 5678</a></li>
-                            <li><a href="#"><i class="fa fa-envelope"></i> info@netszatyor.hu</a></li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="col-sm-6 text-end">
-                    <ul class="nav navbar-nav">
-                        <li><a href="/login"><i class="fa fa-lock"></i> Belépés</a></li>
-                        <li><a href="/register"><i class="fa fa-user"></i> Regisztráció</a></li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="header-middle bg-light py-3">
-        <div class="container text-center">
-            <h1>Netszatyor Webáruház</h1>
-        </div>
-    </div>
-</header>
-
-<!-- Termékek -->
-<section>
+<div layout:fragment="content">
     <div class="container">
         <div class="row">
-            <h2 class="title text-center">Akciós termékek</h2>
-            <div class="col-sm-12">
-                <div class="features_items row">
-                    <div class="col-md-4 mb-4" th:each="termek : ${ckt}">
-                        <div class="product-image-wrapper">
-                            <div class="single-products">
-                                <div class="productinfo text-center">
-                                    <img <img th:if="${termek.kepek != null and !termek.kepek.isEmpty()}"
-                                              th:src="@{${termek.kepek[0]}}" alt="Kép" style="max-height:200px">
-
-                                    <img th:if="${termek.kepek == null or termek.kepek.isEmpty()}"
-                                         src="/img/no-image.jpg" alt="Nincs kép" style="max-height:200px">
-
-                                    <h2 th:text="${termek.cktakc} + ' Ft'">Akciós ár</h2>
-                                    <p>
-                                        <span class="text-decoration-line-through" th:text="${termek.cktfar} + ' Ft'">Eredeti ár</span><br>
-                                        <span th:text="${termek.cktnev}">Terméknév</span>
-                                    </p>
-                                    <a href="#" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i> Kosárba</a>
-                                </div>
+            <!-- Bal oldali szűrő -->
+            <div class="col-sm-3">
+                <div class="left-sidebar">
+                    <h2>Kategóriák</h2>
+                    <div class="panel-group category-products">
+                        <div class="panel panel-default" th:each="focsoport : ${kategoriak}">
+                            <div class="panel-heading">
+                                <h4 class="panel-title">
+                                    <a th:href="@{/?csp={kod}(kod=${focsoport.cspkod})}"
+                                       th:text="${focsoport.cspnev}">Kategória</a>
+                                </h4>
                             </div>
                         </div>
                     </div>
+
+                    <h2>Alcsoportok</h2>
+                    <ul class="nav nav-pills nav-stacked">
+                        <li th:each="alcsoport : ${alcsoportok}">
+                            <a th:href="@{/?csa={kod}(kod=${alcsoport.csakod})}" th:text="${alcsoport.csanev}">Alcsoport</a>
+                        </li>
+                    </ul>
+
+                    <h2>Rendezés</h2>
+                    <select class="form-control mb-3" onchange="location = this.value;">
+                        <option value="/" th:selected="${rendezes == null}">Alapértelmezett</option>
+                        <option th:value="@{/?rendezes=ar_asc}" th:selected="${rendezes == 'ar_asc'}">Ár szerint növekvő</option>
+                        <option th:value="@{/?rendezes=ar_desc}" th:selected="${rendezes == 'ar_desc'}">Ár szerint csökkenő</option>
+                    </select>
+                    <a class="btn btn-secondary" href="/">Szűrők törlése</a>
+                </div>
+            </div>
+
+            <!-- Termékek -->
+            <div class="col-sm-9 padding-right">
+                <div class="features_items">
+                    <h2 class="title text-center">Akciós termékek</h2>
+
+                    <div class="row">
+                        <div class="col-sm-4" th:each="termek : ${ckt}">
+                            <div class="product-image-wrapper">
+                                <div class="single-products">
+                                    <div class="productinfo text-center">
+                                        <img th:if="${termek.kepek != null and !termek.kepek.isEmpty()}"
+                                             th:src="@{${termek.kepek[0]}}" alt="Kép" style="max-height:200px" />
+                                        <img th:if="${termek.kepek == null or termek.kepek.isEmpty()}"
+                                             src="/img/no-image.jpg" alt="Nincs kép" style="max-height:200px" />
+                                        <h2 th:text="${termek.cktakc} + ' Ft'">Akciós ár</h2>
+                                        <p>
+                                            <span class="text-decoration-line-through" th:text="${termek.cktfar} + ' Ft'">Eredeti ár</span><br>
+                                            <span th:text="${termek.cktnev}">Terméknév</span>
+                                        </p>
+                                        <a th:href="@{/termek/{id}(id=${termek.cktkod})}" class="btn btn-default add-to-cart">
+                                            <i class="fa fa-info-circle"></i> Részletek
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div th:if="${#lists.isEmpty(ckt)}" class="col-12">
+                            <p>Nincs megjeleníthető termék.</p>
+                        </div>
+                    </div>
+
+                    <!-- Lapozás -->
+                    <div class="pagination-area text-center mt-4" th:if="${totalPages > 1}">
+                        <ul class="pagination">
+                            <li th:each="i : ${#numbers.sequence(0, totalPages - 1)}"
+                                th:classappend="${i == currentPage} ? 'active'">
+                                <a th:href="@{/?page={i}(i=${i})}" th:text="${i + 1}">1</a>
+                            </li>
+                        </ul>
+                    </div>
+
                 </div>
             </div>
         </div>
     </div>
-</section>
-
-<!-- Lábléc -->
-<footer id="footer" class="bg-dark text-white text-center p-3 mt-4">
-    <p>&copy; 2025 Netszatyor Webáruház</p>
-</footer>
-
-<script th:src="@{/js/jquery.js}"></script>
-<script th:src="@{/js/bootstrap.min.js}"></script>
-<script th:src="@{/js/main.js}"></script>
+</div>
 </body>
 </html>

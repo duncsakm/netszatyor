@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="hu" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Profil szerkesztése - Netszatyor</title>
+  <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+  <link rel="stylesheet" th:href="@{/css/font-awesome.min.css}">
+  <link rel="stylesheet" th:href="@{/css/main.css}">
+</head>
+<body>
+
+<!-- Fejléc -->
+<header id="header">
+  <div class="header_top">
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-6">
+          <div class="contactinfo">
+            <ul class="nav nav-pills">
+              <li><a href="#"><i class="fa fa-phone"></i> +36 1 234 5678</a></li>
+              <li><a href="#"><i class="fa fa-envelope"></i> info@netszatyor.hu</a></li>
+            </ul>
+          </div>
+        </div>
+        <div class="col-sm-6 text-end">
+          <ul class="nav navbar-nav">
+            <li><a href="/"><i class="fa fa-home"></i> Főoldal</a></li>
+            <li><a href="/logout"><i class="fa fa-unlock"></i> Kilépés</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="header-middle bg-light py-3">
+    <div class="container text-center">
+      <h1>Profil szerkesztése</h1>
+    </div>
+  </div>
+</header>
+
+<!-- Tartalom -->
+<main class="container my-5">
+  <form th:action="@{/profil}" th:object="${profil}" method="post">
+    <div class="mb-3">
+      <label for="nev" class="form-label">Név</label>
+      <input type="text" class="form-control" id="nev" th:field="*{nev}" required>
+    </div>
+
+    <h5>Számlázási cím</h5>
+    <div class="row">
+      <div class="col-md-3 mb-3">
+        <label class="form-label">Irányítószám</label>
+        <input type="text" class="form-control" th:field="*{irsz}" required>
+      </div>
+      <div class="col-md-3 mb-3">
+        <label class="form-label">Település</label>
+        <input type="text" class="form-control" th:field="*{telepules}" required>
+      </div>
+      <div class="col-md-3 mb-3">
+        <label class="form-label">Utca</label>
+        <input type="text" class="form-control" th:field="*{utca}" required>
+      </div>
+      <div class="col-md-3 mb-3">
+        <label class="form-label">Házszám</label>
+        <input type="text" class="form-control" th:field="*{hazszam}" required>
+      </div>
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Egyéb címkiegészítés</label>
+      <input type="text" class="form-control" th:field="*{cimegyeb}">
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">Telefonszám (nem kötelező)</label>
+      <input type="text" class="form-control" th:field="*{telefon}">
+    </div>
+
+    <div class="form-check mb-3">
+      <input type="checkbox" class="form-check-input" id="ceg" th:field="*{ceg}">
+      <label class="form-check-label" for="ceg">Cégként vásárolok</label>
+    </div>
+
+    <div class="mb-3" th:if="*{ceg}">
+      <label class="form-label">Adószám</label>
+      <input type="text" class="form-control" th:field="*{adoszam}">
+    </div>
+
+    <div class="form-check mb-3">
+      <input type="checkbox" class="form-check-input" id="szallitasMegegyezik" th:field="*{szallitasMegegyezik}">
+      <label class="form-check-label" for="szallitasMegegyezik">A szállítási cím megegyezik a számlázási címmel</label>
+    </div>
+
+    <div id="szallitasiCim" th:if="!*{szallitasMegegyezik}">
+      <h5>Szállítási cím</h5>
+      <div class="row">
+        <div class="col-md-3 mb-3">
+          <label class="form-label">Irányítószám</label>
+          <input type="text" class="form-control" th:field="*{szallirsz}">
+        </div>
+        <div class="col-md-3 mb-3">
+          <label class="form-label">Település</label>
+          <input type="text" class="form-control" th:field="*{szalltelepules}">
+        </div>
+        <div class="col-md-3 mb-3">
+          <label class="form-label">Utca</label>
+          <input type="text" class="form-control" th:field="*{szallutca}">
+        </div>
+        <div class="col-md-3 mb-3">
+          <label class="form-label">Házszám</label>
+          <input type="text" class="form-control" th:field="*{szallhazszam}">
+        </div>
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Egyéb címkiegészítés</label>
+        <input type="text" class="form-control" th:field="*{szallcimegyeb}">
+      </div>
+    </div>
+
+    <button type="submit" class="btn btn-success">Mentés</button>
+  </form>
+</main>
+
+<!-- Lábléc -->
+<footer id="footer" class="bg-dark text-white text-center p-3 mt-4">
+  <p>&copy; 2025 Netszatyor Webáruház</p>
+</footer>
+
+<script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+<script th:src="@{/js/jquery.js}"></script>
+<script th:src="@{/js/main.js}"></script>
+</body>
+</html>

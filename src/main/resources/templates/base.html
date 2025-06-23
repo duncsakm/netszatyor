@@ -1,45 +1,73 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      xmlns:sec="https://www.thymeleaf.org/extras/spring-security">
+<html lang="hu" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
 <head>
     <meta charset="UTF-8">
-    <title layout:title-pattern="$CONTENT_TITLE - Netszatyor">Netszatyor</title>
-    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <title th:text="${pageTitle} ?: 'Netszatyor Webáruház'">Netszatyor Webáruház</title>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+
+    <!-- CSS stíluslapok -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/css/style.css">
+
+    <!-- Libek (pl. owlcarousel) -->
+    <link rel="stylesheet" href="/lib/owlcarousel/assets/owl.carousel.min.css">
+
+    <!-- Saját kiegészítő stílusok, ha vannak -->
+    <link rel="stylesheet" href="/css/main.css">
 </head>
+
 <body>
 
-<header>
-    <nav>
-        <a th:href="@{/}">Kezdőlap</a>
-        <a th:href="@{/upload}">Feltöltés</a>
+<!-- Fejléc -->
+<header id="header">
+    <div class="header_top">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="contactinfo">
+                        <ul class="nav nav-pills">
+                            <li><a href="#"><i class="fa fa-phone"></i> +36 1 234 5678</a></li>
+                            <li><a href="#"><i class="fa fa-envelope"></i> info@netszatyor.hu</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-sm-6 text-end">
+                    <ul class="nav navbar-nav">
+                        <li><a href="/login"><i class="fa fa-lock"></i> Belépés</a></li>
+                        <li><a href="/register"><i class="fa fa-user"></i> Regisztráció</a></li>
+                        <li><a href="/cart"><i class="fa fa-shopping-cart"></i> Kosár</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
 
-        <span sec:authorize="isAuthenticated()">
-            <b sec:authentication="name">[bejelentkezve]</b> |
-            <form th:action="@{/logout}" method="post" style="display:inline">
-                <button type="submit"
-                        style="background:none; border:none; color:#000; cursor:pointer; text-decoration:underline; font: inherit;">
-                    Kijelentkezés
-                </button>
-            </form>
-            <p>AUTH OK</p>
-        </span>
-
-        <span sec:authorize="isAnonymous()">
-            <a th:href="@{/login}">Belépés</a> |
-            <a th:href="@{/register}">Regisztráció</a>
-            <p>NEM VAGY BEJELENTKEZVE</p>
-        </span>
-    </nav>
+    <div class="header-middle bg-light py-3">
+        <div class="container text-center">
+            <h1>Netszatyor Webáruház</h1>
+        </div>
+    </div>
 </header>
 
-<main layout:fragment="content">
-    <!-- Az oldalspecifikus tartalom ide kerül -->
+<!-- Tartalom -->
+<main class="container my-4" layout:fragment="content">
+    <!-- ide jön a konkrét oldal tartalma (pl. index.html) -->
 </main>
 
-<footer>
-    <p>&copy; 2025 Netszatyor</p>
+<!-- Lábléc -->
+<footer id="footer" class="bg-dark text-white text-center p-3 mt-4">
+    <p>&copy; 2025 Netszatyor Webáruház</p>
 </footer>
 
+<!-- JavaScript fájlok -->
+<script src="/js/jquery.js"></script>
+<script src="/js/bootstrap.bundle.min.js"></script>
+<script src="/lib/easing/easing.min.js"></script>
+<script src="/lib/owlcarousel/owl.carousel.min.js"></script>
+<script src="/js/main.js"></script>
 </body>
 </html>

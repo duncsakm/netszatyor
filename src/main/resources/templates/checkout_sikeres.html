@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="hu" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Megrendelés sikeres - Netszatyor</title>
+  <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+  <link rel="stylesheet" th:href="@{/css/font-awesome.min.css}">
+  <link rel="stylesheet" th:href="@{/css/main.css}">
+</head>
+<body>
+
+<!-- Fejléc -->
+<header id="header">
+  <!-- Top header -->
+  <div class="header_top">
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-6">
+          <div class="contactinfo">
+            <ul class="nav nav-pills">
+              <li><a href="#"><i class="fa fa-phone"></i> +36 1 234 5678</a></li>
+              <li><a href="#"><i class="fa fa-envelope"></i> info@netszatyor.hu</a></li>
+            </ul>
+          </div>
+        </div>
+        <div class="col-sm-6 text-end">
+          <ul class="nav navbar-nav">
+            <li><a href="/"><i class="fa fa-home"></i> Főoldal</a></li>
+            <li><a href="/logout"><i class="fa fa-unlock"></i> Kilépés</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Middle header -->
+  <div class="header-middle">
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-4">
+          <div class="logo pull-left">
+            <a href="/" style="font-size: 28px; font-weight: bold;">Netszatyor</a>
+          </div>
+        </div>
+        <div class="col-sm-8">
+          <div class="shop-menu pull-right">
+            <ul class="nav navbar-nav">
+              <li><a href="/profil"><i class="fa fa-user"></i> Profil</a></li>
+              <li><a href="/cart"><i class="fa fa-shopping-cart"></i> Kosár</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- Tartalom -->
+<section>
+  <div class="container">
+    <div class="row">
+      <div class="col-sm-12 text-center">
+        <div class="alert alert-success mt-5">
+          <h2>Köszönjük a megrendelést!</h2>
+          <p>A megrendelését sikeresen rögzítettük.</p>
+          <p>Hamarosan e-mailben visszaigazolást küldünk.</p>
+        </div>
+        <a href="/" class="btn btn-default"><i class="fa fa-arrow-left"></i> Vissza a főoldalra</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Lábléc -->
+<footer id="footer">
+  <div class="footer-bottom">
+    <div class="container">
+      <div class="row">
+        <p class="pull-left">© 2025 Netszatyor Webáruház</p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script th:src="@{/js/jquery.js}"></script>
+<script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+<script th:src="@{/js/main.js}"></script>
+</body>
+</html>
